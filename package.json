@@ -2,10 +2,10 @@
   "name": "serverless-lambda-authorizer-jwt",
   "version": "0.0.1",
   "description": "Serverless REST API using serverless",
-  "main": "handlers.js",
+  "main": "handler.js",
   "scripts": {
     "start": "",
-    "dev": "",
+    "dev": "nodemon --exec serverless offline",
     "deploy": "serverless deploy",
     "lint": "eslint ./src --ext .json --ext .js --fix"
   },
@@ -32,6 +32,7 @@
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.0.1",
     "eslint-watch": "^3.1.4",
-    "serverless": "^2.11.1"
+    "nodemon": "^2.0.20",
+    "serverless": "^3.23.0"
   }
 }
