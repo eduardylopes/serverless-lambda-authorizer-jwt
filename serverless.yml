@@ -41,6 +41,14 @@ functions:
               paths:
                 id: true
 
+  authenticationUser:
+    handler: handler.authenticationUser
+    events:
+      - http:
+          path: /login
+          method: POST
+          cors: true
+
 resources:
   Resources:
     UsersDynamoDBTable:
