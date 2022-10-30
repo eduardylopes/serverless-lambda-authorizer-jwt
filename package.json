@@ -2,12 +2,22 @@
   "name": "serverless-lambda-authorizer-jwt",
   "version": "0.0.1",
   "description": "Serverless REST API using serverless",
-  "main": "handler.js",
   "scripts": {
-    "start": "",
     "dev": "nodemon --exec serverless offline",
     "deploy": "serverless deploy",
-    "lint": "eslint ./src --ext .json --ext .js --fix"
+    "prettier": "npx prettier --write --ignore-unknown .",
+    "eslint": "npx eslint --fix . --ext .js"
+  },
+  "husky": {
+    "hooks": {
+        "pre-commit": "npx lint-staged"
+    }
+  },
+  "lint-staged": {
+      "src/**/*.js": [
+          "npx pretty-quick --staged",
+          "npx eslint --fix src --ext .js"
+      ]
   },
   "keywords": [
     "node",
@@ -18,21 +28,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.796.0",
+    "@aws-sdk/client-dynamodb": "^3.199.0",
+    "@aws-sdk/lib-dynamodb": "^3.199.0",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^8.5.1",
     "uuid": "^8.3.1"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-json": "^1.2.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "eslint-watch": "^3.1.4",
+    "eslint": "^8.26.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
     "nodemon": "^2.0.20",
-    "serverless": "^3.23.0"
+    "prettier": "^2.7.1",
+    "pretty-quick": "^3.1.3",
+    "serverless": "^3.23.0",
+    "serverless-offline": "^11.2.1"
   }
 }

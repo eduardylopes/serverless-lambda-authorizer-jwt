@@ -1,6 +1,9 @@
 service: serverless-lambda-authorizer-jwt
 
-frameworkVersion: '2 || 3'
+frameworkVersion: '3'
+
+plugins:
+  - serverless-offline
 
 provider:
   name: aws
@@ -19,35 +22,43 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - 'Fn::GetAtt': [ UsersDynamoDBTable, Arn ]
+        - 'Fn::GetAtt': [UsersDynamoDBTable, Arn]
+  environment:
+    USERS_TABLE: users
 
 functions:
   createUser:
-    handler: handler.createUser
+    handler: create-user.handler
     events:
       - http:
           path: /users
           method: POST
           cors: true
+          authorizer: authorizer
+
   getUser:
-    handler: handler.getUser
+    handler: get-user.handler
     events:
       - http:
           path: /users/{id}
           method: GET
           cors: true
+          authorizer: authorizer
           request:
             parameters:
               paths:
                 id: true
 
-  authenticationUser:
-    handler: handler.authenticationUser
+  authenticateUser:
+    handler: authenticate-user.handler
     events:
       - http:
           path: /login
           method: POST
           cors: true
+
+  authorizer:
+    handler: authorizer.handler
 
 resources:
   Resources:
