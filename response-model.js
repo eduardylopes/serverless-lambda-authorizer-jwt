@@ -7,7 +7,7 @@ class ResponseModel {
       message,
     };
 
-    if (data) Object.assign(body, data);
+    if (data) Object.assign(body, { data });
 
     this.body = JSON.stringify(body);
 
@@ -18,4 +18,4 @@ class ResponseModel {
   }
 }
 
-module.exports = ResponseModel;
+module.exports = { ResponseModel };

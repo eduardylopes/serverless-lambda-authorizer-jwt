@@ -1,7 +1,6 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { GetCommand } = require('@aws-sdk/lib-dynamodb');
 const jwt = require('jsonwebtoken');
-const { ResponseModel } = require('./response-model');
 
 const { JWT_SECRET } = process.env;
 const { USERS_TABLE } = process.env;
@@ -33,29 +32,28 @@ const generateAuthResponse = (effect, methodArn) => {
   };
 };
 
-const handler = async (event) => {
+exports.handler = async (event) => {
   const { authorizationToken, methodArn } = event;
-
   if (!authorizationToken) return generateAuthResponse('Deny', methodArn);
 
   const token = authorizationToken.replace('Bearer ', '');
-  const decoded = jwt.verify(token, JWT_SECRET);
-  const { id } = decoded.payload;
-
-  const command = new GetCommand({
-    TableName: USERS_TABLE,
-    Key: {
-      id,
-    },
-  });
 
   try {
+    const { email } = jwt.verify(token, JWT_SECRET);
+
+    const command = new GetCommand({
+      TableName: USERS_TABLE,
+      Key: {
+        email,
+      },
+    });
+
     const { Item } = await client.send(command);
+
     if (!Item) return generateAuthResponse('Deny', methodArn);
   } catch (error) {
-    return new ResponseModel();
+    return generateAuthResponse('Deny', methodArn);
   }
+
   return generateAuthResponse('Allow', methodArn);
 };
-
-module.exports = { handler };

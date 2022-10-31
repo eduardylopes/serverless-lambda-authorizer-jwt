@@ -4,6 +4,7 @@ frameworkVersion: '3'
 
 plugins:
   - serverless-offline
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
@@ -24,7 +25,7 @@ provider:
       Resource:
         - 'Fn::GetAtt': [UsersDynamoDBTable, Arn]
   environment:
-    USERS_TABLE: users
+    USERS_TABLE: '${self:service}-${self:provider.stage}-users'
 
 functions:
   createUser:
@@ -66,10 +67,14 @@ resources:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
           - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: email
             KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-        TableName: users
+        TableName: '${self:service}-${self:provider.stage}-users'

@@ -9,7 +9,7 @@ const { JWT_SECRET } = process.env;
 
 const client = new DynamoDBClient({ region: 'sa-east-1' });
 
-exports.authenticateUser = async (event) => {
+exports.handler = async (event) => {
   const { email, password } = JSON.parse(event.body);
 
   const command = new ScanCommand({
@@ -24,7 +24,9 @@ exports.authenticateUser = async (event) => {
   });
 
   try {
-    const { Item } = await client.send(command);
+    const {
+      Items: [Item],
+    } = await client.send(command);
 
     if (!Item) return new ResponseModel(null, 404, 'Invalid email or password');
 
@@ -41,12 +43,16 @@ exports.authenticateUser = async (event) => {
     };
 
     const token = jwt.sign(tokenPayload, JWT_SECRET, {
-      expiresIn: '15m',
+      expiresIn: '1d',
     });
 
-    return new ResponseModel(null, 200, 'Token successfully signed', {
-      access: token,
-    });
+    return new ResponseModel(
+      {
+        access: token,
+      },
+      200,
+      'Token successfully signed',
+    );
   } catch (error) {
     return new ResponseModel(null, 404, 'Invalid email or password');
   }

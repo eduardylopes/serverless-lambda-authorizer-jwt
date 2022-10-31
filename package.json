@@ -10,14 +10,14 @@
   },
   "husky": {
     "hooks": {
-        "pre-commit": "npx lint-staged"
+      "pre-commit": "npx lint-staged"
     }
   },
   "lint-staged": {
-      "src/**/*.js": [
-          "npx pretty-quick --staged",
-          "npx eslint --fix src --ext .js"
-      ]
+    "src/**/*.js": [
+      "npx pretty-quick --staged",
+      "npx eslint --fix src --ext .js"
+    ]
   },
   "keywords": [
     "node",
@@ -44,6 +44,7 @@
     "prettier": "^2.7.1",
     "pretty-quick": "^3.1.3",
     "serverless": "^3.23.0",
+    "serverless-dotenv-plugin": "^4.0.2",
     "serverless-offline": "^11.2.1"
   }
 }
